@@ -1,0 +1,113 @@
+/* Ensure body has no margin */
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+/* Make App container take full viewport */
+.App {
+  height: 100vh;
+  width: 100%;
+  position: relative; /* Needed for absolute positioning of children */
+  overflow: hidden; /* Prevent scrollbars if card slightly overflows */
+}
+
+/* --- Route Card Styling --- */
+.route-card {
+  position: absolute; /* Position over the map */
+  top: 20px;
+  left: 20px;
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 10; /* Ensure card is above map */
+  max-width: 350px; /* Prevent card from becoming too wide */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  gap: 10px; /* Spacing between elements inside the card */
+}
+
+.route-card h3 {
+  margin: 0 0 5px 0; /* Adjust margin for heading */
+  text-align: center;
+}
+
+/* Style inner divs for alignment if needed */
+.route-card > div {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap; /* Allow buttons/inputs to wrap */
+}
+.route-card > div:has(> button) {
+  /* Target divs containing buttons */
+  justify-content: space-around; /* Space out buttons */
+}
+
+.route-card label {
+  margin-right: 5px;
+  font-weight: bold;
+}
+
+.route-card select {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex-grow: 1; /* Allow select to take available space */
+}
+
+.route-card button {
+  padding: 6px 12px;
+  font-size: 0.9em;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+}
+.route-card button:hover:not(:disabled) {
+  background-color: #e2e6ea;
+}
+
+.route-card button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.route-card button[title] {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.route-card p {
+  /* Styling for messages like 'Click map...' */
+  font-size: 0.85em;
+  margin: 0;
+  text-align: center;
+  width: 100%; /* Ensure it takes full width */
+  color: #555;
+}
+
+.route-card .error-message {
+  color: #dc3545;
+  font-weight: bold;
+  margin: 5px 0 0 0;
+  width: 100%;
+  text-align: center;
+}
+
+/* Ensure map container takes remaining space */
+/* Assuming MapComponent's direct parent is .App */
+/* If MapComponent is wrapped in another div, adjust selector */
+.App > div:has(> .mapboxgl-map) {
+  /* Select the div containing the map */
+  flex-grow: 1; /* Allow map container to take remaining vertical space */
+  position: relative; /* Needed for absolute positioned map elements */
+  min-height: 200px; /* Ensure map has some height even if panel grows */
+}
+
+/* Ensure map component's direct div fills its container */
+/* This style is now IN MapComponent.jsx: style={{ width: '100%', height: '100%' }} */
