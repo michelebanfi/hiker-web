@@ -12,101 +12,124 @@ body {
   overflow: hidden; /* Prevent scrollbars if card slightly overflows */
 }
 
-/* --- Route Card Styling --- */
 .route-card {
-  position: absolute; /* Position over the map */
-  top: 20px;
-  left: 20px;
-  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+  position: absolute;
+  top: 10px; /* Slightly less space from top */
+  left: 10px; /* Slightly less space from left */
+  background-color: rgba(255, 255, 255, 0.9);
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  z-index: 10; /* Ensure card is above map */
-  max-width: 350px; /* Prevent card from becoming too wide */
+  z-index: 10;
+  max-width: 350px;
   display: flex;
-  flex-direction: column; /* Stack items vertically */
-  gap: 10px; /* Spacing between elements inside the card */
+  flex-direction: column;
+  gap: 12px; /* Consistent gap */
 }
 
 .route-card h3 {
-  margin: 0 0 5px 0; /* Adjust margin for heading */
+  margin: 0 0 8px 0;
   text-align: center;
+  font-size: 1.1em;
 }
 
-/* Style inner divs for alignment if needed */
 .route-card > div {
+  /* General div container */
   display: flex;
   gap: 8px;
   align-items: center;
-  flex-wrap: wrap; /* Allow buttons/inputs to wrap */
-}
-.route-card > div:has(> button) {
-  /* Target divs containing buttons */
-  justify-content: space-around; /* Space out buttons */
+  flex-wrap: wrap;
 }
 
-.route-card label {
-  margin-right: 5px;
-  font-weight: bold;
+/* Style specific button groups */
+.route-card .point-buttons,
+.route-card .action-buttons {
+  justify-content: space-between; /* Space out buttons */
+}
+.route-card .action-buttons button {
+  flex-grow: 1; /* Make action buttons share space */
+  margin: 0 2px; /* Small gap between them */
 }
 
 .route-card select {
-  padding: 5px;
+  padding: 6px 8px; /* Slightly more padding */
   border: 1px solid #ccc;
   border-radius: 4px;
-  flex-grow: 1; /* Allow select to take available space */
+  flex-grow: 1;
+  background-color: white;
 }
 
 .route-card button {
-  padding: 6px 12px;
+  padding: 8px 12px; /* Slightly larger buttons */
   font-size: 0.9em;
   cursor: pointer;
   border: 1px solid #ccc;
   border-radius: 4px;
-  background-color: #f8f9fa;
+  background-color: #f0f0f0; /* Lighter default background */
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 .route-card button:hover:not(:disabled) {
   background-color: #e2e6ea;
+  border-color: #bbb;
 }
-
 .route-card button:disabled {
   cursor: not-allowed;
   opacity: 0.6;
+  background-color: #f8f8f8;
 }
 
-.route-card button[title] {
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  vertical-align: middle;
+.route-card button.active-setting {
+  /* Style for button when its mode is active */
+  background-color: #d4edda; /* Light green */
+  border-color: #c3e6cb;
+  font-weight: bold;
 }
 
-.route-card p {
-  /* Styling for messages like 'Click map...' */
+.route-card .get-directions-button {
+  /* Specific style for the initial button */
+  width: 100%;
+  padding: 10px;
+  font-size: 1em;
+  background-color: #5cb85c; /* Green */
+  color: white;
+  border: none;
+}
+.route-card .get-directions-button:hover {
+  background-color: #4cae4c;
+}
+
+.route-card p.instruction-text {
+  /* 'Click on map...' text */
   font-size: 0.85em;
-  margin: 0;
+  margin: 5px 0 0 0; /* Adjust spacing */
   text-align: center;
-  width: 100%; /* Ensure it takes full width */
-  color: #555;
+  width: 100%;
+  color: #337ab7; /* Blueish instruction color */
+  font-style: italic;
 }
 
 .route-card .error-message {
   color: #dc3545;
   font-weight: bold;
-  margin: 5px 0 0 0;
+  font-size: 0.9em;
+  margin-top: 8px;
   width: 100%;
   text-align: center;
+  background-color: #f8d7da; /* Light red background */
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #f5c6cb;
 }
 
-/* Ensure map container takes remaining space */
-/* Assuming MapComponent's direct parent is .App */
-/* If MapComponent is wrapped in another div, adjust selector */
+/* Ensure MapComponent's container fills space correctly */
+/* This style should be applied to the div directly containing the map canvas */
 .App > div:has(> .mapboxgl-map) {
-  /* Select the div containing the map */
-  flex-grow: 1; /* Allow map container to take remaining vertical space */
-  position: relative; /* Needed for absolute positioned map elements */
-  min-height: 200px; /* Ensure map has some height even if panel grows */
+  width: 100%;
+  height: 100%; /* Make sure it fills the .App container */
+  position: absolute; /* Ensure it's behind the cards */
+  top: 0;
+  left: 0;
+  z-index: 1; /* Behind UI elements */
 }
 
 /* Ensure map component's direct div fills its container */

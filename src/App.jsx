@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import axios from "axios";
 import MapComponent from "./mapComponent"; // Assuming MapComponent.jsx is in the same folder
 import "./App.css"; // Or your main CSS file
+import RouteSummaryCard from "./RouteSummary"; // Import the new component
 
 // Load ORS API Key from environment
 const ORS_API_KEY = import.meta.env.VITE_ORS_API_KEY;
@@ -16,6 +17,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showInputs, setShowInputs] = useState(false); // Toggle visibility of controls
+  const [routeSummary, setRouteSummary] = useState(null); // <<< New state for summary data
   const [settingPointMode, setSettingPointMode] = useState(null); // 'start' or 'end'
 
   // --- Map Click Handler ---
@@ -58,6 +60,7 @@ function App() {
     setIsLoading(true);
     setError(null);
     setRouteGeojson(null); // Clear previous route
+    setRouteSummary(null); // Clear previous summary
 
     // ORS expects coordinates in [longitude, latitude] format
     const coordinates = [
@@ -65,11 +68,23 @@ function App() {
       [endPoint.lng, endPoint.lat],
     ];
 
+    // --- Body for ORS request ---
+    const requestBody = {
+      coordinates: coordinates,
+      // Request elevation and extra info
+      elevation: "true", // Request elevation profile data
+      extra_info: ["steepness", "surface", "waytype", "traildifficulty"], // Request details
+      units: "m", // Use metric units (meters)
+      // You might want instructions_format: "text" or "html" if displaying turn-by-turn
+      // geometry_simplify: "true", // Optional: simplify geometry for performance
+      // preference: "recommended", // or "shortest" etc. depending on profile
+    };
+
     try {
       console.log(`Fetching route for profile: ${profile}`, coordinates);
       const response = await axios.post(
         `${ORS_DIRECTIONS_URL}/${profile}/geojson`,
-        { coordinates: coordinates },
+        requestBody,
         {
           headers: {
             Authorization: ORS_API_KEY,
@@ -78,7 +93,48 @@ function App() {
         }
       );
       console.log("ORS Response:", response.data);
-      setRouteGeojson(response.data); // Store the entire GeoJSON response
+      if (
+        response.data &&
+        response.data.features &&
+        response.data.features.length > 0
+      ) {
+        const feature = response.data.features[0];
+        setRouteGeojson(response.data); // Store the entire GeoJSON
+
+        // --- Extract summary data ---
+        if (feature.properties) {
+          const properties = feature.properties;
+          const summary = properties.summary; // { distance, duration, ascent, descent }
+          const extras = properties.extras; // { surface: { values, summary }, waytype: {...}, ... }
+          const segments = properties.segments; // Array of segments, might contain steps
+          const ascent = properties.ascent || 0; // Total ascent in meters
+          const descent = properties.descent || 0; // Total descent in meters
+
+          // Basic structure for summary state
+          const extractedSummary = {
+            distance: summary?.distance, // in meters
+            duration: summary?.duration, // in seconds
+            ascent: ascent, // in meters
+            descent: descent, // in meters
+            surface: extras?.surface?.values, // Array: [{ value: 'paved', distance: 123, amount: '20.5%'}, ...]
+            waytype: extras?.waytype?.values,
+            traildifficulty: extras?.traildifficulty?.summary,
+            // You could also extract bounding box, segments etc. if needed
+            // For elevation profile, you'd use feature.geometry.coordinates which now include elevation if elevation=true
+            // Example: coordinate [lng, lat, elevation]
+            coordinates: feature.geometry?.coordinates || [],
+          };
+          console.log("Extracted Summary:", extractedSummary);
+          setRouteSummary(extractedSummary);
+        } else {
+          setError("Route found, but properties data is missing.");
+          setRouteSummary(null);
+        }
+      } else {
+        setError("No route features found in the response.");
+        setRouteGeojson(null);
+        setRouteSummary(null);
+      }
     } catch (err) {
       console.error("Error fetching route:", err);
       let message = "Failed to fetch route.";
@@ -94,6 +150,7 @@ function App() {
       }
       setError(message);
       setRouteGeojson(null); // Clear potentially partial data
+      setRouteSummary(null); // Clear summary on error
     } finally {
       setIsLoading(false);
     }
@@ -104,6 +161,7 @@ function App() {
     setStartPoint(null);
     setEndPoint(null);
     setRouteGeojson(null);
+    setRouteSummary(null); // <<< Clear summary state
     setError(null);
     setSettingPointMode(null); // Reset point setting mode
     // Keep showInputs as it is, user might want to plot a new route
@@ -184,7 +242,7 @@ function App() {
               <p>Click on the map to set the {settingPointMode} point.</p>
             )}
             {/* Action Buttons */}
-            <div>
+            <div className="action-buttons">
               {" "}
               {/* Optional: Wrap buttons for better layout control */}
               <button
@@ -214,6 +272,14 @@ function App() {
         endPoint={endPoint}
         onMapClick={handleMapClick}
       />
+      {/* --- Route Summary Card (Bottom Center) --- */}
+      {/* Render only if we have summary data */}
+      {routeSummary && (
+        <RouteSummaryCard
+          summary={routeSummary}
+          profile={profile} // Pass profile for context if needed
+        />
+      )}
     </div>
   );
 }

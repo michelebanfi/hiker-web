@@ -1,0 +1,129 @@
+/* src/RouteSummaryCard.css */
+
+.route-summary-card {
+  position: absolute;
+  bottom: 20px; /* Position from the bottom */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Adjust for centering */
+  width: 80%; /* Adjust width as needed */
+  max-width: 700px; /* Max width */
+  background-color: rgba(255, 255, 255, 0.95); /* Slightly more opaque */
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 10; /* Ensure it's above the map */
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Space between rows */
+  font-family: sans-serif;
+  font-size: 0.9em;
+  color: #333;
+}
+
+/* --- Top Row: Main Stats --- */
+.summary-stats {
+  display: flex;
+  justify-content: space-around; /* Distribute items evenly */
+  align-items: center;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  gap: 15px; /* Space between stat items */
+  border-bottom: 1px solid #eee; /* Separator */
+  padding-bottom: 10px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column; /* Stack label and value */
+  align-items: center;
+  text-align: center;
+}
+
+.stat-item .label {
+  font-size: 0.8em;
+  color: #666;
+  margin-bottom: 3px;
+  text-transform: uppercase;
+}
+
+.stat-item .value {
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+/* --- Bottom Row: Breakdowns --- */
+.summary-breakdowns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Space between breakdown bars */
+}
+
+.breakdown {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.breakdown-title {
+  font-size: 0.8em;
+  color: #555;
+  min-width: 60px; /* Ensure alignment */
+  text-align: right;
+  font-weight: bold;
+}
+
+.breakdown-bar {
+  flex-grow: 1; /* Take remaining space */
+  display: flex;
+  height: 12px; /* Bar height */
+  border-radius: 6px; /* Rounded bar */
+  overflow: hidden; /* Clip segments */
+  background-color: #e0e0e0; /* Background for empty space if any */
+  border: 1px solid #ccc; /* Subtle border */
+}
+
+.bar-segment {
+  height: 100%;
+  transition: background-color 0.3s ease; /* Smooth color transition if needed */
+  /* Tooltip will be native browser title attribute */
+}
+
+.bar-segment:hover {
+  /* Optional: Add subtle hover effect */
+  filter: brightness(1.1);
+}
+
+/* Optional: Placeholder for elevation profile */
+.elevation-profile-placeholder {
+  height: 80px; /* Example height */
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-style: italic;
+  margin-top: 5px; /* Space from stats */
+}
+
+/* Responsive adjustments (optional) */
+@media (max-width: 600px) {
+  .route-summary-card {
+    width: 95%;
+    bottom: 10px;
+    padding: 10px 15px;
+  }
+  .summary-stats {
+    justify-content: space-between; /* Might look better on small screens */
+  }
+  .stat-item .value {
+    font-size: 1em;
+  }
+  .breakdown-title {
+    min-width: 50px;
+    font-size: 0.75em;
+  }
+  .breakdown-bar {
+    height: 10px;
+    border-radius: 5px;
+  }
+}
