@@ -1,6 +1,7 @@
 // src/RouteSummaryCard.jsx
 import React from "react";
 import "./RouteSummaryCard.css"; // We'll create this CSS file
+import ElevationProfileChart from "./ElevationProfileChart"; // <<< Import
 
 // --- Helper Functions ---
 
@@ -136,8 +137,13 @@ function RouteSummaryCard({ summary, profile }) {
         </div>
       </div>
 
-      {/* Optional: Add Elevation Profile Placeholder/Component here later */}
-      {/* <div className="elevation-profile-placeholder">Elevation Profile Area</div> */}
+      {summary.coordinates && summary.coordinates.length > 0 && (
+        <div className="elevation-profile-container">
+          {" "}
+          {/* Add a container */}
+          <ElevationProfileChart coordinates={summary.coordinates} />
+        </div>
+      )}
 
       {/* Bottom Row: Breakdown Bars */}
       <div className="summary-breakdowns">

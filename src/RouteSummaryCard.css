@@ -127,3 +127,35 @@
     border-radius: 5px;
   }
 }
+
+.elevation-profile-container {
+  height: 150px; /* Adjust height as needed */
+  width: 100%; /* Take full width of the card */
+  margin-top: 10px; /* Space above the chart */
+  margin-bottom: 10px; /* Space below the chart */
+  padding: 5px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  position: relative; /* Needed for chart responsiveness */
+}
+
+/* --- Bottom Row: Breakdowns --- */
+.summary-breakdowns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid #eee; /* Add separator if chart is present */
+  padding-top: 10px; /* Add padding if chart is present */
+  margin-top: 5px;
+}
+
+/* ... (keep existing styles for .breakdown, .breakdown-bar, etc.) ... */
+
+/* Responsive adjustments (optional) */
+@media (max-width: 600px) {
+  /* ... (keep existing media query adjustments) ... */
+
+  .elevation-profile-container {
+    height: 120px; /* Adjust height for smaller screens */
+  }
+}
