@@ -13,6 +13,7 @@ function MapComponent({ routeGeojson, startPoint, endPoint, onMapClick }) {
   const startMarkerRef = useRef(null); // Ref for start marker
   const endMarkerRef = useRef(null); // Ref for end marker
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [isCloudActive, setIsCloudActive] = useState(false); // New state for cloud button
 
   const [lng] = useState(9.19); // Initial center state - could be removed if not needed
   const [lat] = useState(45.46);
@@ -20,6 +21,11 @@ function MapComponent({ routeGeojson, startPoint, endPoint, onMapClick }) {
 
   // Store onMapClick in a ref to avoid recreating the click handler
   const onMapClickRef = useRef(onMapClick);
+
+  // Handle cloud button click
+  const handleCloudClick = () => {
+    setIsCloudActive((prev) => !prev);
+  };
 
   // Update the ref whenever the prop changes
   useEffect(() => {
@@ -250,8 +256,55 @@ function MapComponent({ routeGeojson, startPoint, endPoint, onMapClick }) {
   }, []);
 
   return (
-    // Container div - Make sure its parent (.App) allows it to take space
-    <div ref={setMapContainer} style={{ width: "100%", height: "100%" }} />
+    // Container div with relative positioning to allow overlay buttons
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      {/* Map container */}
+      <div ref={setMapContainer} style={{ width: "100%", height: "100%" }} />
+
+      {/* Buttons overlay */}
+      <div
+        style={{
+          position: "absolute",
+          top: "10px",
+          left: "200px",
+          zIndex: 10,
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+        }}
+      >
+        {/* Cloud button */}
+        <button
+          onClick={handleCloudClick}
+          style={{
+            backgroundColor: "white",
+            border: "2px solid rgb(51, 51, 51)",
+            borderRadius: "4px",
+            padding: "8px",
+            cursor: "pointer",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "40px",
+            height: "40px",
+          }}
+          aria-label="Toggle cloud view"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 512 512"
+            fill={isCloudActive ? "rgb(0,122,255)" : "none"}
+            stroke={isCloudActive ? "none" : "currentColor"}
+            strokeWidth="2"
+          >
+            <path d="M396,432H136c-36.44,0-70.36-12.57-95.51-35.41C14.38,372.88,0,340,0,304c0-36.58,13.39-68.12,38.72-91.22,18.11-16.53,42.22-28.25,69.18-33.87a16,16,0,0,0,11.37-9.15,156.24,156.24,0,0,1,42.05-56C187.76,91.69,220.5,80,256,80a153.57,153.57,0,0,1,107.14,42.9c24.73,23.81,41.5,55.28,49.18,92a16,16,0,0,0,12.12,12.39C470,237.42,512,270.43,512,328c0,33.39-12.24,60.78-35.41,79.23C456.23,423.43,428.37,432,396,432Z" />
+          </svg>
+        </button>
+      </div>
+    </div>
   );
 }
 

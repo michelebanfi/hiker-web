@@ -1,0 +1,112 @@
+/* src/MapComponent.css */
+
+/* Wrapper for positioning context */
+.map-container-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Prevent potential scrollbars from overlays */
+}
+
+/* The actual map container */
+.map-container-inner {
+  width: 100%;
+  height: 100%;
+}
+
+/* Styling for custom markers */
+.custom-marker {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px solid rgb(51, 51, 51);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+/* Specific marker icon colors (using currentColor which inherits) */
+.marker-start svg {
+  color: #4caf50; /* Green for start */
+}
+.marker-end svg {
+  color: #f44336; /* Red for end */
+}
+
+/* Container for overlay buttons */
+.map-overlay-buttons {
+  position: absolute;
+  top: 10px;
+  /* Adjust left/right positioning as needed - place it relative to the route card */
+  /* Example: Place it next to where the route card might end */
+  left: calc(350px + 30px); /* Assuming route card max-width + gap */
+  /* Or position from right:
+       right: 60px; /* If NavigationControl is top-right */
+  z-index: 10; /* Above map, below route card if necessary */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.8); /* Optional background */
+  padding: 5px;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for individual map control buttons (like radar toggle) */
+.map-control-button {
+  background-color: white;
+  border: 1px solid #ccc; /* Slightly softer border */
+  border-radius: 4px;
+  padding: 0; /* Remove padding for icon-only button */
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px; /* Consistent size */
+  height: 36px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.map-control-button:hover:not(:disabled) {
+  background-color: #f0f0f0;
+  border-color: #bbb;
+}
+.map-control-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Style for the button when its feature is active */
+.map-control-button.active {
+  background-color: #e7f3ff; /* Light blue background */
+  border-color: #90caf9;
+}
+
+/* Optional: Style for error indicator */
+.radar-error-indicator {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 0.8em;
+  background-color: rgba(255, 232, 80, 0.9);
+  border-radius: 50%;
+  padding: 1px 3px;
+  line-height: 1;
+}
+
+/* Optional: Styling for timestamp display */
+.timestamp-display {
+  position: absolute;
+  bottom: 10px; /* Position above route summary card */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  z-index: 11; /* Above map, potentially above summary */
+}

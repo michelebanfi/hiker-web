@@ -4,6 +4,25 @@ body {
   font-family: sans-serif;
 }
 
+.toggle-controls-button {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px; /* Or 50% for round */
+  padding: 0;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  color: #333; /* Icon color */
+}
+.toggle-controls-button:hover {
+  background-color: #f0f0f0;
+  border-color: #bbb;
+}
+
 /* Make App container take full viewport */
 .App {
   height: 100vh;
@@ -99,12 +118,11 @@ body {
 }
 
 .route-card p.instruction-text {
-  /* 'Click on map...' text */
   font-size: 0.85em;
-  margin: 5px 0 0 0; /* Adjust spacing */
+  margin: 2px 0 0 0; /* Reduced top margin */
   text-align: center;
   width: 100%;
-  color: #337ab7; /* Blueish instruction color */
+  color: #555; /* Less prominent color */
   font-style: italic;
 }
 
