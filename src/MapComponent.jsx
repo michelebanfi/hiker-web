@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { Location, Flag } from "react-ionicons"; // Import the Ionicons
 
 const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
@@ -83,9 +84,9 @@ function MapComponent({ routeGeojson, startPoint, endPoint, onMapClick }) {
           "line-cap": "round",
         },
         paint: {
-          "line-color": "#007cbf", // Blue color for the route
+          "line-color": "rgb(0,122,255)", // Blue color for the route
           "line-width": 6,
-          "line-opacity": 0.8,
+          "line-opacity": 1,
         },
       });
     });
@@ -154,6 +155,55 @@ function MapComponent({ routeGeojson, startPoint, endPoint, onMapClick }) {
     }
   }, [routeGeojson, mapLoaded]); // Only depend on routeGeojson and mapLoaded
 
+  // --- Create Custom Marker Elements ---
+  const createStartMarkerElement = () => {
+    const markerElement = document.createElement("div");
+
+    // Style the marker container
+    markerElement.style.width = "40px";
+    markerElement.style.height = "40px";
+    markerElement.style.display = "flex";
+    markerElement.style.justifyContent = "center";
+    markerElement.style.alignItems = "center";
+    markerElement.style.borderRadius = "50%";
+    markerElement.style.backgroundColor = "white";
+    markerElement.style.border = "2px solid rgb(51, 51, 51)";
+    markerElement.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+    markerElement.style.cursor = "pointer";
+    markerElement.style.transform = "translate(-50%, -50%)";
+
+    // Use direct SVG for location icon (from Ionicons)
+    markerElement.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512"><circle cx="256" cy="192" r="32"/><path d="M256,32C167.78,32,96,100.65,96,185c0,40.17,18.31,93.59,54.42,158.78,29,52.34,62.55,99.67,80,123.22a31.75,31.75,0,0,0,51.22,0c17.42-23.55,51-70.88,80-123.22C397.69,278.61,416,225.19,416,185,416,100.65,344.22,32,256,32Zm0,224a64,64,0,1,1,64-64A64.07,64.07,0,0,1,256,256Z"/></svg>
+    `;
+
+    return markerElement;
+  };
+
+  const createEndMarkerElement = () => {
+    const markerElement = document.createElement("div");
+
+    // Style the marker container
+    markerElement.style.width = "40px";
+    markerElement.style.height = "40px";
+    markerElement.style.display = "flex";
+    markerElement.style.justifyContent = "center";
+    markerElement.style.alignItems = "center";
+    markerElement.style.borderRadius = "50%";
+    markerElement.style.backgroundColor = "white";
+    markerElement.style.border = "2px solid rgb(51, 51, 51)";
+    markerElement.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+    markerElement.style.cursor = "pointer";
+    markerElement.style.transform = "translate(-50%, -50%)";
+
+    // Use direct SVG for flag icon (from Ionicons)
+    markerElement.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512"><path d="M80,480a16,16,0,0,1-16-16V68.13A24,24,0,0,1,75.9,47.41C88,40.38,112.38,32,160,32c37.21,0,78.83,14.71,115.55,27.68C305.12,70.13,333.05,80,352,80a183.84,183.84,0,0,0,71-14.5,18,18,0,0,1,25,16.58V301.44a20,20,0,0,1-12,18.31c-8.71,3.81-40.51,16.25-84,16.25-24.14,0-54.38-7.14-86.39-14.71C229.63,312.79,192.43,304,160,304c-36.87,0-55.74,5.58-64,9.11V464A16,16,0,0,1,80,480Z"/></svg>
+    `;
+
+    return markerElement;
+  };
+
   // --- Effect to Update Start/End Markers ---
   useEffect(() => {
     if (!mapRef.current || !mapLoaded) return; // Make sure map exists and is loaded
@@ -171,14 +221,24 @@ function MapComponent({ routeGeojson, startPoint, endPoint, onMapClick }) {
     // Add new start marker
     if (startPoint) {
       console.log("Adding start marker at:", startPoint);
-      startMarkerRef.current = new mapboxgl.Marker({ color: "#00FF00" }) // Green
+      const startElement = createStartMarkerElement();
+
+      startMarkerRef.current = new mapboxgl.Marker({
+        element: startElement,
+        anchor: "center",
+      })
         .setLngLat([startPoint.lng, startPoint.lat])
         .addTo(mapRef.current);
     }
 
     // Add new end marker
     if (endPoint) {
-      endMarkerRef.current = new mapboxgl.Marker({ color: "#FF0000" }) // Red
+      const endElement = createEndMarkerElement();
+
+      endMarkerRef.current = new mapboxgl.Marker({
+        element: endElement,
+        anchor: "center",
+      })
         .setLngLat([endPoint.lng, endPoint.lat])
         .addTo(mapRef.current);
     }

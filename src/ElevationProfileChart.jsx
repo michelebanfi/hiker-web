@@ -106,8 +106,8 @@ function ElevationProfileChart({ coordinates }) {
         {
           label: "Elevation",
           data: elevationData, // The elevation values for the Y-axis
-          borderColor: "rgb(75, 192, 192)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)", // Fill color
+          borderColor: "rgb(51, 51, 51)",
+          backgroundColor: "rgba(51, 51, 51, 0.2)", // Fill color
           tension: 0.3, // Slightly smooth the line
           pointRadius: 0, // Hide points for a cleaner look
           pointHitRadius: 10, // Easier to hover for tooltip
